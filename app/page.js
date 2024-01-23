@@ -1,37 +1,38 @@
 "use client"
 import Image from 'next/image'
 import { Editor } from '@tinymce/tinymce-react';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
+import {useEffect} from 'react'
+
 
 export default function Home() {
-  const editorRef = useRef(null);
-   const log = () => {
-     if (editorRef.current) {
-       console.log(editorRef.current.getContent());
-     }
-   };
+  const [data, setData] = useState([])
+
+  useEffect(()=>{
+    fetch("https://api.restful-api.dev/objects")
+    .then(res => res.json())
+    .then(
+      (result) => {
+           console.log(result)
+           setData(result)
+      }) 
+  },[])
+
+  const f = ()=>{
+    console.log(data)
+    if (data.length!=0) 
+    {
+       return data[0].name
+    } 
+    return "loading"
+  }
+
+
+
   return (
-    <>
-    <Editor
-      apiKey='owene61yocb3so2fral9oc6bc8d6d72xph6rdazy4fnpg1uj'
-      onInit={(evt, editor) => editorRef.current = editor}
-      initialValue="<p>This is the initial content of the editor.</p>"
-      init={{
-        height: 500,
-        menubar: false,
-        plugins: [
-          'advlist autolink lists link image charmap print preview anchor',
-          'searchreplace visualblocks code fullscreen',
-          'insertdatetime media table paste code help wordcount'
-        ],
-        toolbar: 'undo redo | formatselect | ' +
-        'bold italic backcolor | alignleft aligncenter ' +
-        'alignright alignjustify | bullist numlist outdent indent | ' +
-        'removeformat | help',
-        content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
-      }}
-    />
-    <button onClick={log}>Log editor content</button>
-  </>
+    <div>
+
+      {data.map(item=>(<p>{item.name}</p>))}
+      </div>
   )
 }
