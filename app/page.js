@@ -9,30 +9,32 @@ export default function Home() {
   const [data, setData] = useState([])
 
   useEffect(()=>{
-    fetch("https://api.restful-api.dev/objects")
-    .then(res => res.json())
-    .then(
-      (result) => {
-           console.log(result)
-           setData(result)
-      }) 
+   
+    var myHeaders = new Headers();
+myHeaders.append("x-hasura-admin-secret", "Jdb1LINocMbGj4uN3G3o1ipIJlPICESepwQJXGF4m4puBOoHYT48zlZd7PrF0S2U");
+
+var requestOptions = {
+  method: 'POST',
+  headers: myHeaders,
+  redirect: 'follow'
+};
+
+fetch("https://accurate-titmouse-63.hasura.app/api/rest/userAPI", requestOptions)
+  .then(response => response.text())
+  .then(result => setData(result))
+  .catch(error => console.log('error', error));
+
+
+
+    
   },[])
 
-  const f = ()=>{
-    console.log(data)
-    if (data.length!=0) 
-    {
-       return data[0].name
-    } 
-    return "loading"
-  }
 
 
 
   return (
-    <div>
 
-      {data.map(item=>(<p>{item.name}</p>))}
-      </div>
+    <p>{data}</p>
+
   )
 }
